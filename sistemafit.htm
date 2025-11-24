@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FITGYM — Gestão de Academia</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">FG</div>
+        <div>
+          <h1>FITGYM</h1>
+          <div class="muted small">Força. Rotina. Resultado.</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button id="nav-home" class="active">Painel</button>
+        <button id="nav-register">Cadastrar Aluno</button>
+        <button id="nav-workout">Criar Treino</button>
+        <button id="nav-payments">Pagamentos</button>
+        <button id="nav-catraca">Catraca</button>
+        <button id="nav-equip">Equipamentos</button>
+        <button id="nav-admin">Área ADM</button>
+      </nav>
+
+      <div class="footer-contact">
+        <div class="muted" style="font-weight:600">Contato</div>
+        <div class="muted small">Tel: (11) 99999-9999</div>
+        <div class="muted small">Email: contato.fitgym@gmail.com</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="search"><input id="search" placeholder="Procurar aluno, treino ou pagamento" /></div>
+        <div class="user-controls">
+          <div class="muted">Bem-vindo, Gestor</div>
+          <div class="badge">FITGYM</div>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:18px">
+        <!-- WELCOME -->
+        <section class="card welcome">
+          <div class="welcome-text">
+            <h2>Seja bem-vindo ao FITGYM</h2>
+            <p class="motivation">Transforme o esforço de hoje na confiança de amanhã.</p>
+            <div class="welcome-actions">
+             
+            </div>
+          </div>
+          <img class="welcome-img" src="https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="treino">
+        </section>
+
+        <!-- STATS -->
+        <aside class="card stats">
+          <div class="stat">
+            <div class="muted">Alunos cadastrados</div>
+            <strong id="stat-students">0</strong>
+          </div>
+          <div class="stat">
+            <div class="muted">Pagamentos efetuados</div>
+            <strong id="stat-payments">0</strong>
+          </div>
+          <div class="stat">
+            <div class="muted">Planos ativos</div>
+            <strong id="stat-plans">—</strong>
+          </div>
+          <div class="stat">
+            <div class="muted">Passagens catraca</div>
+            <strong id="stat-catraca">0</strong>
+          </div>
+        </aside>
+
+        <!-- HOME: Lista de alunos -->
+        <section class="card" id="section-home" style="grid-column:span 8">
+          <h3>Lista de alunos</h3>
+          <div id="students-list" class="students-list"></div>
+        </section>
+
+        <!-- CADASTRO -->
+        <section class="card" id="section-register" style="display:none;grid-column:span 8">
+          <h3>Cadastro de Aluno</h3>
+          <form id="form-register">
+            <div class="row">
+              <div class="half">
+                <label>Nome completo</label>
+                <input id="r-name" required />
+              </div>
+              <div class="half">
+                <label>Telefone</label>
+                <input id="r-phone" required />
+              </div>
+            </div>
+            <label>E-mail</label>
+            <input id="r-email" type="email" />
+            <div class="row">
+              <div class="half">
+                <label>Plano</label>
+                <select id="r-plan">
+                  <option value="mensal">Mensal — R$120</option>
+                  <option value="trimestral">Trimestral — R$320</option>
+                  <option value="anual">Anual — R$1000</option>
+                </select>
+              </div>
+              <div class="half">
+                <label>Senha (máx 6 dígitos)</label>
+                <input id="r-pass" maxlength="6" placeholder="Apenas dígitos" />
+              </div>
+            </div>
+            <label>Observações / Objetivos</label>
+            <textarea id="r-note" rows="3"></textarea>
+            <div class="row" style="margin-top:8px">
+              <button class="btn" type="button" onclick="registerStudent()">Cadastrar</button>
+              <button class="btn ghost" type="button" onclick="resetForm()">Limpar</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- CRIAR TREINO -->
+        <section class="card" id="section-workout" style="display:none;grid-column:span 8">
+          <h3>Criar Treino</h3>
+          <form id="form-workout">
+            <label>Aluno</label>
+            <select id="w-student"></select>
+            <label>Nome do treino</label>
+            <input id="w-name" />
+            <label>Selecione os exercícios</label>
+            <div id="exercise-list" class="exercise-grid"></div>
+            <div style="margin-top:8px">
+              <button class="btn" type="button" onclick="createWorkout()">Salvar treino</button>
+            </div>
+          </form>
+
+          <h4 style="margin-top:12px">Treinos criados</h4>
+          <div id="workouts-list"></div>
+        </section>
+
+        <!-- PAGAMENTOS -->
+        <section class="card" id="section-payments" style="display:none;grid-column:span 8">
+          <h3>Gerenciar Pagamentos</h3>
+          <form id="form-pay">
+            <label>Aluno</label>
+            <select id="p-student"></select>
+            <div class="row">
+              <div class="half">
+                <label>Plano</label>
+                <select id="p-plan">
+                  <option value="mensal">Mensal — R$120</option>
+                  <option value="trimestral">Trimestral — R$320</option>
+                  <option value="anual">Anual — R$1000</option>
+                </select>
+              </div>
+              <div class="half">
+                <label>Data</label>
+                <input id="p-date" type="date" />
+              </div>
+            </div>
+            <div style="margin-top:8px">
+              <button class="btn" type="button" onclick="addPayment()">Registrar Pagamento</button>
+            </div>
+          </form>
+
+          <h4 style="margin-top:12px">Histórico de Pagamentos</h4>
+          <div id="payments-list"></div>
+        </section>
+
+        <!-- CATRACA -->
+        <section class="card" id="section-catraca" style="display:none;grid-column:span 8">
+          <h3>Controle de Catraca</h3>
+          <p>Total de passagens: <strong id="catracaCount">0</strong></p>
+          <div class="row">
+            <div class="half">
+              <label>Associar passagem a aluno (opcional)</label>
+              <select id="catraca-student"></select>
+            </div>
+            <div class="half" style="display:flex;align-items:end">
+              <button class="btn" onclick="registrarCatraca()">Registrar Passagem</button>
+            </div>
+          </div>
+
+          <h4 style="margin-top:12px">Últimas passagens</h4>
+          <div id="catraca-list"></div>
+        </section>
+
+        <!-- EQUIPAMENTOS -->
+        <section class="card" id="section-equip" style="display:none;grid-column:span 8">
+          <h3>Equipamentos Estragados</h3>
+          <div class="row">
+            <input id="equip-nome" placeholder="Nome do equipamento" />
+            <button class="btn" onclick="registrarEquipamento()">Registrar</button>
+          </div>
+          <h4 style="margin-top:12px">Lista</h4>
+          <ul id="listaEquipamentos"></ul>
+        </section>
+
+        <!-- ADM -->
+        <section class="card" id="section-admin" style="display:none;grid-column:span 12">
+          <h3>Área ADM</h3>
+          <div class="row">
+            <input id="adm-pin" maxlength="6" placeholder="PIN de acesso" />
+            <button class="btn" onclick="loginAdm()">Entrar</button>
+            <button class="btn ghost" onclick="logoutAdm()">Sair</button>
+          </div>
+
+          <div style="margin-top:12px" id="adm-panel" class="muted">
+            Acesse com PIN para ver os dados administrativos.
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
